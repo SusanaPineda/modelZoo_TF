@@ -5,18 +5,15 @@
 ````
 git clone https://github.com/tensorflow/models.git
 ````
-* instalar protobuf. Dentro de la carpeta ./models/research/
+* instalar protobuf.
 ````
-wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
-unzip protobuf.zip
+cd models/research
+# Compile protos.
+protoc object_detection/protos/*.proto --python_out=.
+# Install TensorFlow Object Detection API.
+cp object_detection/packages/tf2/setup.py .
+python -m pip install --use-feature=2020-resolver .
 
-./bin/protoc object_detection/protos/*.proto --python_out=.
-
-export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-source ~/.bashrc
-
-# Si se está utilizando conda revisar si se sigue dentro del env de conda
-python setup.py install
 ````
 * Descarga de los [modelos](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 
