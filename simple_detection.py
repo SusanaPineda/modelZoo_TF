@@ -1,12 +1,8 @@
-### DEPRECATED ###
-# The following code may not work correctly due to updates in the libraries used. Use object_detection_2.py for correct operation.
-
+import pathlib
 import numpy as np
 import tensorflow as tf
-import pathlib
-import cv2
+
 from PIL import Image
-from time import time
 
 from object_detection.utils import ops as utils_ops
 from object_detection.utils import label_map_util
@@ -15,16 +11,6 @@ from object_detection.utils import visualization_utils as vis_util
 utils_ops.tf = tf.compat.v1
 tf.gfile = tf.io.gfile
 
-"""config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.compat.v1.InteractiveSession(config=config)"""
-
-def load_model(model_name):
-    model = tf.saved_model.load(str(model_name))
-    model = model.signatures['serving_default']
-
-    return model
-
 
 def run_inference_for_single_image(model, image):
     image = np.asarray(image)
@@ -32,10 +18,8 @@ def run_inference_for_single_image(model, image):
     input_tensor = input_tensor[tf.newaxis, ...]
 
     # Run inference
-    start_time = time()
-    output_dict = model(input_tensor)
-    elapsed_time = time() - start_time
-    print(elapsed_time)
+    model_fn = model.signatures['serving_default']
+    output_dict = model_fn(input_tensor)
 
     num_detections = int(output_dict.pop('num_detections'))
     output_dict = {key: value[0, :num_detections].numpy()
@@ -69,19 +53,21 @@ def show_inference(model, image_path):
         use_normalized_coordinates=True,
         line_thickness=8)
 
-    #cv2.imshow("img", image_np)
+    Image.fromarray(image_np).show()
 
 
-PATH_TO_LABELS = 'coco_labels.pbtxt'
-category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
+if __name__ == '__main__':
+    #path of the downloaded models
+    model_path = "detectionModelZoo/ssd_resnet/saved_model/"
+    detection_model = tf.saved_model.load(model_path)
 
-PATH_TO_TEST_IMAGES_DIR = pathlib.Path('./images/')
-TEST_IMAGE_PATHS = sorted(list(PATH_TO_TEST_IMAGES_DIR.glob("*.png")))
+    #path of cocolabels
+    PATH_TO_LABELS = 'models/research/object_detection/data/mscoco_label_map.pbtxt'
+    category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
-model_name = 'ssd_mobilenet_v2/saved_model/'
-detection_model = load_model(model_name)
+    #path of images
+    PATH_TO_TEST_IMAGES_DIR = pathlib.Path('images/')
+    TEST_IMAGE_PATHS = sorted(list(PATH_TO_TEST_IMAGES_DIR.glob("*.png")))
 
-for image_path in TEST_IMAGE_PATHS:
-    show_inference(detection_model, image_path)
-    if cv2.waitKey(1) == 'q':
-        break
+    for image_path in TEST_IMAGE_PATHS:
+        show_inference(detection_model, image_path)
