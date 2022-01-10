@@ -1,3 +1,6 @@
+### DEPRECATED ###
+# The following code may not work correctly due to updates in the libraries used. Use object_detection_2.py for correct operation.
+
 import numpy as np
 import tensorflow as tf
 import pathlib
