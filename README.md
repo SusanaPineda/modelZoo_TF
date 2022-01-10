@@ -1,20 +1,31 @@
 # Script model zoo Tensorflow
 ## Instalacion
-* instalar requirements.txt
+
+* **VERSIONES**
+  * Python = 3.7.x 
 * Descargar el repositorio tensorflow/models
 ````
 git clone https://github.com/tensorflow/models.git
 ````
 * instalar protobuf.
 ````
+sudo snap install protobuf --classic
+````
+* instalar el API de detección de objetos de TensorFlow
+````
 cd models/research
-# Compile protos.
+# Compilar protos.
 protoc object_detection/protos/*.proto --python_out=.
 # Install TensorFlow Object Detection API.
 cp object_detection/packages/tf2/setup.py .
 python -m pip install --use-feature=2020-resolver .
 
 ````
+````
+# Comprobar la instalación
+python object_detection/builders/model_builder_tf2_test.py
+````
+
 * Descarga de los [modelos](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 
 
