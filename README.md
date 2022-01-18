@@ -26,7 +26,7 @@ python -m pip install --use-feature=2020-resolver .
 python object_detection/builders/model_builder_tf2_test.py
 ````
 
-* Descarga de los [modelos](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
+* Descarga de los [modelos](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
 
 
 ## Instalar Tensorflow en arquitecturas jetson
